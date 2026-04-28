@@ -1,6 +1,12 @@
 package fr.univ_amu.iut.exercice6;
 
 import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -35,31 +41,61 @@ import javafx.stage.Stage;
  */
 public class Palette extends Application {
 
+  private int compteurRouge;
+  private int compteurVert;
+  private int compteurBleu;
+
   @Override
   public void start(Stage primaryStage) {
-    // TODO exercice 6 : implémenter la palette décrite dans la Javadoc.
-    //
-    // Stratégie conseillée :
-    //
-    // 1. Créer un BorderPane comme racine.
-    //
-    // 2. Top : un HBox avec trois boutons "Rouge", "Vert", "Bleu".
-    //    Donne-leur les ids "btn-rouge", "btn-vert", "btn-bleu" - les tests
-    //    les retrouvent via robot.lookup("#btn-rouge") etc.
-    //
-    // 3. Center : un Pane avec l'id "zone", taille minimale 300×200.
-    //    Change sa couleur via setStyle("-fx-background-color: red;") etc.
-    //
-    // 4. Bottom : un Label avec l'id "compteurs", texte initial
-    //    "Rouge: 0  Vert: 0  Bleu: 0".
-    //
-    // 5. Trois entiers compteur_rouge, compteur_vert, compteur_bleu
-    //    (ou trois variables d'instance). Chaque clic incrémente le bon
-    //    compteur et reformate le texte du label.
-    //
-    // 6. Attention au format du texte du label : les tests vérifient la
-    //    présence exacte des substrings "Rouge: 2", "Vert: 0", "Bleu: 1"
-    //    après une séquence de clics.
+    BorderPane root = new BorderPane();
+
+    Button btnRouge = new Button("Rouge");
+    btnRouge.setId("btn-rouge");
+    Button btnVert = new Button("Vert");
+    btnVert.setId("btn-vert");
+    Button btnBleu = new Button("Bleu");
+    btnBleu.setId("btn-bleu");
+
+    HBox boutons = new HBox(10, btnRouge, btnVert, btnBleu);
+    root.setTop(boutons);
+
+    Pane zone = new Pane();
+    zone.setId("zone");
+    zone.setMinSize(300, 200);
+    root.setCenter(zone);
+
+    Label compteurs = new Label(getTexteCompteurs());
+    compteurs.setId("compteurs");
+    root.setBottom(compteurs);
+
+    btnRouge.setOnAction(
+        event -> {
+          compteurRouge++;
+          zone.setStyle("-fx-background-color: red;");
+          compteurs.setText(getTexteCompteurs());
+        });
+
+    btnVert.setOnAction(
+        event -> {
+          compteurVert++;
+          zone.setStyle("-fx-background-color: green;");
+          compteurs.setText(getTexteCompteurs());
+        });
+
+    btnBleu.setOnAction(
+        event -> {
+          compteurBleu++;
+          zone.setStyle("-fx-background-color: blue;");
+          compteurs.setText(getTexteCompteurs());
+        });
+
+    Scene scene = new Scene(root);
+    primaryStage.setScene(scene);
+    primaryStage.show();
+  }
+
+  private String getTexteCompteurs() {
+    return "Rouge: " + compteurRouge + "  Vert: " + compteurVert + "  Bleu: " + compteurBleu;
   }
 
   public static void main(String[] args) {
